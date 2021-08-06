@@ -7,7 +7,7 @@ export default function Home() {
   const { hello } = useQuery();
   return (
     <Stack>
-      <Text fontSize="3em">Hellozxc World</Text>
+      <Text fontSize="3em">Hellasdasdozxc World</Text>
       <Text>{hello || 'Loadiasdasdng...'}</Text>
     </Stack>
   );
