@@ -2,9 +2,10 @@ import * as React from 'react';
 
 import { ChakraProvider } from '@chakra-ui/react';
 
-import { AppProps } from 'next/app';
-
-export default function MyApp({ Component, pageProps }: AppProps) {
+export default function MyApp({
+  Component,
+  pageProps
+}: import('next/app').AppProps) {
   return (
     <ChakraProvider>
       <Component {...pageProps} />
