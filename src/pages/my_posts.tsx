@@ -1,14 +1,16 @@
-import { Stack, UnorderedList, ListItem, Button } from '@chakra-ui/react';
+import { Button, ListItem, Stack, UnorderedList } from '@chakra-ui/react';
 
+import { CreatePost } from '../components/CreatePost';
+import { WithAuth } from '../components/WithRequireAuth';
 import { CursorConnectionArgs, usePaginatedQuery } from '../gqty';
-import { CreatePost } from './CreatePost';
 
 const first = 20;
 
-export function MyPosts() {
+export default WithAuth(function MyPosts() {
   const { data, fetchMore, isLoading } = usePaginatedQuery(
     (query, input: CursorConnectionArgs, { prepass }) => {
-      const posts = query.currentUser.user!.posts({
+      if (!query.currentUser.user) return null;
+      const posts = query.currentUser.user.posts({
         input,
       });
 
@@ -24,14 +26,16 @@ export function MyPosts() {
         first,
       },
       merge({ data: { existing, incoming }, uniqBy }) {
+        if (!incoming) return null;
+
         if (existing) {
-          console.log({
-            existing: JSON.parse(JSON.stringify(existing)),
-            incoming: JSON.parse(JSON.stringify(incoming)),
-          });
           return {
+            __typename: 'PostsConnection',
             ...incoming,
-            nodes: uniqBy([...existing.nodes, ...incoming.nodes], (v) => v.id),
+            nodes: uniqBy(
+              [...existing.nodes, ...(incoming?.nodes || [])],
+              (v) => v.id
+            ),
           };
         }
 
@@ -43,13 +47,13 @@ export function MyPosts() {
   if (!data) return <p>Loading..</p>;
 
   return (
-    <Stack>
+    <Stack padding="1em">
       <UnorderedList>
-        {data.nodes.map((post) => {
-          return <ListItem key={post.id}>{post.title}</ListItem>;
+        {data?.nodes.map((post, index) => {
+          return <ListItem key={post.id ?? index}>{post.title}</ListItem>;
         })}
       </UnorderedList>
-      {data.pageInfo.hasNextPage && (
+      {data?.pageInfo.hasNextPage && (
         <Button
           isLoading={isLoading}
           isDisabled={isLoading}
@@ -66,4 +70,4 @@ export function MyPosts() {
       <CreatePost />
     </Stack>
   );
-}
+});

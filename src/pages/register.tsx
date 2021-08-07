@@ -6,12 +6,12 @@ import { Button, Input, Stack, Text } from '@chakra-ui/react';
 import { useMutation } from '../gqty';
 import { useCurrentUser } from '../hooks/currentUser';
 
-export function Login() {
+export default function Register() {
   const { currentUser } = useCurrentUser();
-  const [login, { data, isLoading, error }] = useMutation(
-    ({ login }, email: string) => {
+  const [register, { data, isLoading, error }] = useMutation(
+    ({ register }, email: string) => {
       return prepass(
-        login({
+        register({
           input: {
             email,
           },
@@ -30,7 +30,7 @@ export function Login() {
 
   return (
     <Stack>
-      {errorMessage ? <Text color="red">{errorMessage}</Text> : null}
+      {errorMessage ? <Text css={{ color: 'red' }}>{errorMessage}</Text> : null}
       <Stack as="form" maxWidth="350px">
         <Text>Email</Text>
         <Input fontSize="1.2em" ref={inputRef} placeholder="Put your email" />
@@ -46,12 +46,12 @@ export function Login() {
           isDisabled={isLoading}
           onClick={(ev) => {
             ev.preventDefault();
-            login({
+            register({
               args: inputRef.current!.value,
             }).catch(console.error);
           }}
         >
-          Login
+          Register
         </Button>
       </Stack>
     </Stack>

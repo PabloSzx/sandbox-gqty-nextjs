@@ -10,10 +10,10 @@ export function useCurrentUser(suspense = true) {
     suspense,
   });
 
-  const token = currentUser.token;
+  const { token, __typename } = currentUser;
   useEffect(() => {
-    setAuthorizationToken(token);
-  }, [token]);
+    if (__typename) setAuthorizationToken(token);
+  }, [token, __typename]);
 
   return {
     currentUser,
