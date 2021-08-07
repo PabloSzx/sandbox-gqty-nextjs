@@ -27,127 +27,151 @@ export interface Scalars {
   EmailAddress: any;
 }
 
+export interface LoginInput {
+  email: Scalars['EmailAddress'];
+}
+
+export interface RegisterInput {
+  email: Scalars['EmailAddress'];
+}
+
 export interface PostCreate {
-  title: Scalars["NonEmptyString"];
-  category?: Maybe<Array<Scalars["String"]>>;
+  title: Scalars['NonEmptyString'];
+  category?: Maybe<Array<Scalars['String']>>;
 }
 
 export interface PostUpdate {
-  id: Scalars["String"];
-  title?: Maybe<Scalars["NonEmptyString"]>;
-  category?: Maybe<Array<Scalars["String"]>>;
-  published?: Maybe<Scalars["Boolean"]>;
+  id: Scalars['String'];
+  title?: Maybe<Scalars['NonEmptyString']>;
+  category?: Maybe<Array<Scalars['String']>>;
+  published?: Maybe<Scalars['Boolean']>;
 }
 
 export enum UserRole {
-  USER = "USER",
-  ADMIN = "ADMIN",
+  USER = 'USER',
+  ADMIN = 'ADMIN',
 }
 
 export interface CursorConnectionArgs {
-  first?: Maybe<Scalars["NonNegativeInt"]>;
-  after?: Maybe<Scalars["NonEmptyString"]>;
-  last?: Maybe<Scalars["NonNegativeInt"]>;
-  before?: Maybe<Scalars["NonEmptyString"]>;
+  first?: Maybe<Scalars['NonNegativeInt']>;
+  after?: Maybe<Scalars['NonEmptyString']>;
+  last?: Maybe<Scalars['NonNegativeInt']>;
+  before?: Maybe<Scalars['NonEmptyString']>;
 }
 
-export const scalarsEnumsHash: import("gqty").ScalarsEnumsHash = {
+export const scalarsEnumsHash: import('gqty').ScalarsEnumsHash = {
   NonNegativeInt: true,
   NonEmptyString: true,
   DateTime: true,
   EmailAddress: true,
-  ID: true,
   String: true,
+  ID: true,
   Boolean: true,
   UserRole: true,
   Int: true,
 };
 export const generatedSchema = {
   query: {
-    __typename: { __type: "String!" },
-    hello: { __type: "String!" },
-    namesList: { __type: "[String!]!", __args: { n: "Int" } },
+    __typename: { __type: 'String!' },
+    hello: { __type: 'String!' },
+    namesList: { __type: '[String!]!', __args: { n: 'Int' } },
+    currentUser: { __type: 'AuthResult!' },
     publicPosts: {
-      __type: "PostsConnection!",
-      __args: { input: "CursorConnectionArgs!" },
+      __type: 'PostsConnection!',
+      __args: { input: 'CursorConnectionArgs!' },
     },
-    postsCategories: { __type: "[Category!]!" },
+    postsCategories: { __type: '[Category!]!' },
   },
   mutation: {
-    __typename: { __type: "String!" },
-    hello: { __type: "String!" },
-    createPost: { __type: "Post!", __args: { post: "PostCreate!" } },
-    updatePost: { __type: "Post!", __args: { post: "PostUpdate!" } },
-    removeOwnPost: { __type: "Boolean!", __args: { postId: "String!" } },
-    setName: { __type: "User!", __args: { name: "String!" } },
+    __typename: { __type: 'String!' },
+    hello: { __type: 'String!' },
+    login: { __type: 'AuthResult!', __args: { input: 'LoginInput!' } },
+    register: { __type: 'AuthResult!', __args: { input: 'RegisterInput!' } },
+    createPost: { __type: 'Post!', __args: { post: 'PostCreate!' } },
+    updatePost: { __type: 'Post!', __args: { post: 'PostUpdate!' } },
+    removeOwnPost: { __type: 'Boolean!', __args: { postId: 'String!' } },
+    setName: { __type: 'User!', __args: { name: 'String!' } },
   },
   subscription: {},
+  LoginInput: { email: { __type: 'EmailAddress!' } },
+  RegisterInput: { email: { __type: 'EmailAddress!' } },
+  AuthResult: {
+    __typename: { __type: 'String!' },
+    user: { __type: 'User' },
+    error: { __type: 'String' },
+    token: { __type: 'String' },
+  },
   Category: {
-    __typename: { __type: "String!" },
-    id: { __type: "ID!" },
-    name: { __type: "String" },
+    __typename: { __type: 'String!' },
+    id: { __type: 'ID!' },
+    name: { __type: 'String' },
     posts: {
-      __type: "PostsConnection!",
-      __args: { input: "CursorConnectionArgs!" },
+      __type: 'PostsConnection!',
+      __args: { input: 'CursorConnectionArgs!' },
     },
   },
   Post: {
-    __typename: { __type: "String!" },
-    id: { __type: "ID!" },
-    createdAt: { __type: "DateTime!" },
-    published: { __type: "Boolean!" },
-    title: { __type: "String!" },
-    category: { __type: "[Category!]" },
+    __typename: { __type: 'String!' },
+    id: { __type: 'ID!' },
+    createdAt: { __type: 'DateTime!' },
+    published: { __type: 'Boolean!' },
+    title: { __type: 'String!' },
+    category: { __type: '[Category!]' },
   },
   PostCreate: {
-    title: { __type: "NonEmptyString!" },
-    category: { __type: "[String!]" },
+    title: { __type: 'NonEmptyString!' },
+    category: { __type: '[String!]' },
   },
   PostUpdate: {
-    id: { __type: "String!" },
-    title: { __type: "NonEmptyString" },
-    category: { __type: "[String!]" },
-    published: { __type: "Boolean" },
+    id: { __type: 'String!' },
+    title: { __type: 'NonEmptyString' },
+    category: { __type: '[String!]' },
+    published: { __type: 'Boolean' },
   },
   PostsConnection: {
-    __typename: { __type: "String!" },
-    nodes: { __type: "[Post!]!" },
-    pageInfo: { __type: "CursorPageInfo!" },
+    __typename: { __type: 'String!' },
+    nodes: { __type: '[Post!]!' },
+    pageInfo: { __type: 'CursorPageInfo!' },
   },
   User: {
-    __typename: { __type: "String!" },
-    id: { __type: "ID!" },
-    name: { __type: "String" },
-    role: { __type: "UserRole!" },
+    __typename: { __type: 'String!' },
+    id: { __type: 'ID!' },
+    name: { __type: 'String' },
+    role: { __type: 'UserRole!' },
+    email: { __type: 'String!' },
     posts: {
-      __type: "PostsConnection!",
-      __args: { input: "CursorConnectionArgs!" },
+      __type: 'PostsConnection!',
+      __args: { input: 'CursorConnectionArgs!' },
     },
   },
   CursorConnectionArgs: {
-    first: { __type: "NonNegativeInt" },
-    after: { __type: "NonEmptyString" },
-    last: { __type: "NonNegativeInt" },
-    before: { __type: "NonEmptyString" },
+    first: { __type: 'NonNegativeInt' },
+    after: { __type: 'NonEmptyString' },
+    last: { __type: 'NonNegativeInt' },
+    before: { __type: 'NonEmptyString' },
   },
   CursorPageInfo: {
-    __typename: { __type: "String!" },
-    hasNextPage: { __type: "Boolean!" },
-    hasPreviousPage: { __type: "Boolean!" },
-    startCursor: { __type: "NonEmptyString" },
-    endCursor: { __type: "NonEmptyString" },
+    __typename: { __type: 'String!' },
+    hasNextPage: { __type: 'Boolean!' },
+    hasPreviousPage: { __type: 'Boolean!' },
+    startCursor: { __type: 'NonEmptyString' },
+    endCursor: { __type: 'NonEmptyString' },
   },
 } as const;
 
 export interface Query {
-  __typename: "Query" | undefined;
-  hello: ScalarsEnums["String"];
+  __typename: 'Query' | undefined;
+  hello: ScalarsEnums['String'];
   namesList: (args?: {
     /**
      * @defaultValue `10`
      */
-    n?: Maybe<Scalars["Int"]>;
-  }) => Array<ScalarsEnums["String"]>;
+    n?: Maybe<Scalars['Int']>;
+  }) => Array<ScalarsEnums['String']>;
+  /**
+   * Current authenticated user
+   */
+  currentUser: AuthResult;
   /**
    * Get all published posts
    */
@@ -159,8 +183,16 @@ export interface Query {
 }
 
 export interface Mutation {
-  __typename: "Mutation" | undefined;
-  hello: ScalarsEnums["String"];
+  __typename: 'Mutation' | undefined;
+  hello: ScalarsEnums['String'];
+  /**
+   * Login user
+   */
+  login: (args: { input: LoginInput }) => AuthResult;
+  /**
+   * Register user
+   */
+  register: (args: { input: RegisterInput }) => AuthResult;
   /**
    * [Authenticated] Create new post
    */
@@ -173,42 +205,50 @@ export interface Mutation {
    * [Authenticated] Remove own post
    */
   removeOwnPost: (args: {
-    postId: Scalars["String"];
-  }) => ScalarsEnums["Boolean"];
-  setName: (args: { name: Scalars["String"] }) => User;
+    postId: Scalars['String'];
+  }) => ScalarsEnums['Boolean'];
+  setName: (args: { name: Scalars['String'] }) => User;
 }
 
 export interface Subscription {
-  __typename: "Subscription" | undefined;
+  __typename: 'Subscription' | undefined;
+}
+
+export interface AuthResult {
+  __typename: 'AuthResult' | undefined;
+  user?: Maybe<User>;
+  error?: Maybe<ScalarsEnums['String']>;
+  token?: Maybe<ScalarsEnums['String']>;
 }
 
 export interface Category {
-  __typename: "Category" | undefined;
-  id: ScalarsEnums["ID"];
-  name?: Maybe<ScalarsEnums["String"]>;
+  __typename: 'Category' | undefined;
+  id: ScalarsEnums['ID'];
+  name?: Maybe<ScalarsEnums['String']>;
   posts: (args: { input: CursorConnectionArgs }) => PostsConnection;
 }
 
 export interface Post {
-  __typename: "Post" | undefined;
-  id: ScalarsEnums["ID"];
-  createdAt: ScalarsEnums["DateTime"];
-  published: ScalarsEnums["Boolean"];
-  title: ScalarsEnums["String"];
+  __typename: 'Post' | undefined;
+  id: ScalarsEnums['ID'];
+  createdAt: ScalarsEnums['DateTime'];
+  published: ScalarsEnums['Boolean'];
+  title: ScalarsEnums['String'];
   category?: Maybe<Array<Category>>;
 }
 
 export interface PostsConnection {
-  __typename: "PostsConnection" | undefined;
+  __typename: 'PostsConnection' | undefined;
   nodes: Array<Post>;
   pageInfo: CursorPageInfo;
 }
 
 export interface User {
-  __typename: "User" | undefined;
-  id: ScalarsEnums["ID"];
-  name?: Maybe<ScalarsEnums["String"]>;
-  role: ScalarsEnums["UserRole"];
+  __typename: 'User' | undefined;
+  id: ScalarsEnums['ID'];
+  name?: Maybe<ScalarsEnums['String']>;
+  role: ScalarsEnums['UserRole'];
+  email: ScalarsEnums['String'];
   /**
    * Posts created by user
    */
@@ -216,17 +256,18 @@ export interface User {
 }
 
 export interface CursorPageInfo {
-  __typename: "CursorPageInfo" | undefined;
-  hasNextPage: ScalarsEnums["Boolean"];
-  hasPreviousPage: ScalarsEnums["Boolean"];
-  startCursor?: Maybe<ScalarsEnums["NonEmptyString"]>;
-  endCursor?: Maybe<ScalarsEnums["NonEmptyString"]>;
+  __typename: 'CursorPageInfo' | undefined;
+  hasNextPage: ScalarsEnums['Boolean'];
+  hasPreviousPage: ScalarsEnums['Boolean'];
+  startCursor?: Maybe<ScalarsEnums['NonEmptyString']>;
+  endCursor?: Maybe<ScalarsEnums['NonEmptyString']>;
 }
 
 export interface SchemaObjectTypes {
   Query: Query;
   Mutation: Mutation;
   Subscription: Subscription;
+  AuthResult: AuthResult;
   Category: Category;
   Post: Post;
   PostsConnection: PostsConnection;
@@ -234,14 +275,15 @@ export interface SchemaObjectTypes {
   CursorPageInfo: CursorPageInfo;
 }
 export type SchemaObjectTypesNames =
-  | "Query"
-  | "Mutation"
-  | "Subscription"
-  | "Category"
-  | "Post"
-  | "PostsConnection"
-  | "User"
-  | "CursorPageInfo";
+  | 'Query'
+  | 'Mutation'
+  | 'Subscription'
+  | 'AuthResult'
+  | 'Category'
+  | 'Post'
+  | 'PostsConnection'
+  | 'User'
+  | 'CursorPageInfo';
 
 export interface GeneratedSchema {
   query: Query;

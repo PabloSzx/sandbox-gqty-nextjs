@@ -2,35 +2,50 @@
  * GQTY: You can safely modify this file and Query Fetcher based on your needs
  */
 
-import { createReactClient } from "@gqty/react";
+import { createClient, QueryFetcher } from 'gqty';
 
-import { createClient, QueryFetcher } from "gqty";
+import { createLogger } from '@gqty/logger';
+import { createReactClient } from '@gqty/react';
+import { createSubscriptionsClient } from '@gqty/subscriptions';
+
 import {
   generatedSchema,
-  scalarsEnumsHash,
   GeneratedSchema,
+  scalarsEnumsHash,
   SchemaObjectTypes,
   SchemaObjectTypesNames,
-} from "./schema.generated";
+} from './schema.generated';
+
+const headers = {
+  'Content-Type': 'application/json',
+  authorization: localStorage.getItem('auth-token') || '',
+};
+
+export function setAuthorizationToken(token: string | null | undefined) {
+  token = token || '';
+  localStorage.setItem('auth-token', token);
+  return (headers.authorization = token);
+}
 
 const queryFetcher: QueryFetcher = async function (query, variables) {
-  // Modify "https://examples-api.gqty.dev/graphql" if needed
-  const response = await fetch("https://examples-api.gqty.dev/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+  const response = await fetch('https://examples-api.gqty.dev/graphql', {
+    method: 'POST',
+    headers,
     body: JSON.stringify({
       query,
       variables,
     }),
-    mode: "cors",
+    mode: 'cors',
   });
 
   const json = await response.json();
 
   return json;
 };
+
+const subscriptionsClient = createSubscriptionsClient({
+  wsEndpoint: 'wss://examples-api.gqty.dev/graphql',
+});
 
 export const client = createClient<
   GeneratedSchema,
@@ -40,6 +55,17 @@ export const client = createClient<
   schema: generatedSchema,
   scalarsEnumsHash,
   queryFetcher,
+  subscriptionsClient,
+  normalization: {
+    identifier(obj) {
+      switch (obj.__typename) {
+        case 'AuthResult':
+          return 'Auth';
+        default:
+          return;
+      }
+    },
+  },
 });
 
 export const { query, mutation, mutate, subscription, resolved, refetch } =
@@ -48,7 +74,6 @@ export const { query, mutation, mutate, subscription, resolved, refetch } =
 export const {
   graphql,
   useQuery,
-  usePaginatedQuery,
   useTransactionQuery,
   useLazyQuery,
   useRefetch,
@@ -57,15 +82,23 @@ export const {
   prepareReactRender,
   useHydrateCache,
   prepareQuery,
+  useSubscription,
+  usePaginatedQuery,
 } = createReactClient<GeneratedSchema>(client, {
   defaults: {
     // Set this flag as "true" if your usage involves React Suspense
     // Keep in mind that you can overwrite it in a per-hook basis
-    suspense: false,
+    suspense: true,
 
     // Set this flag based on your needs
     staleWhileRevalidate: false,
   },
 });
 
-export * from "./schema.generated";
+createLogger(client, {
+  stringifyJSON: false,
+  showSelections: true,
+  showCache: true,
+}).start();
+
+export * from './schema.generated';
