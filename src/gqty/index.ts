@@ -18,7 +18,10 @@ import {
 
 const headers = {
   'Content-Type': 'application/json',
-  authorization: localStorage.getItem('auth-token') || '',
+  authorization:
+    typeof window !== 'undefined'
+      ? localStorage.getItem('auth-token') || ''
+      : '',
 };
 
 export function setAuthorizationToken(token: string | null | undefined) {
