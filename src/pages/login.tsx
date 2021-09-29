@@ -31,7 +31,16 @@ export default function Login() {
   return (
     <Stack>
       {errorMessage ? <Text color="red">{errorMessage}</Text> : null}
-      <Stack as="form" maxWidth="350px">
+      <Stack
+        as="form"
+        maxWidth="350px"
+        onSubmit={(ev) => {
+          ev.preventDefault();
+          login({
+            args: inputRef.current!.value,
+          }).catch(console.error);
+        }}
+      >
         <Text>Email</Text>
         <Input fontSize="1.2em" ref={inputRef} placeholder="Put your email" />
 
@@ -44,12 +53,7 @@ export default function Login() {
           fontWeight="bold"
           isLoading={isLoading}
           isDisabled={isLoading}
-          onClick={(ev) => {
-            ev.preventDefault();
-            login({
-              args: inputRef.current!.value,
-            }).catch(console.error);
-          }}
+          type="submit"
         >
           Login
         </Button>
